@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<suite name="第一个接口测试的API">
+    <test>
+        <classes>
+            <class name="com.api.demo.LoginDemo">
+                <methods>
+                    <include name="login"/>
+                </methods>
+
+
+            </class>
+        </classes>
+    </test>
+    <listeners>
+        <!--<listener class-name="com.api.config.ExtentTestNGIReporterListener"/>-->
+    </listeners>
+
+
+</suite>
