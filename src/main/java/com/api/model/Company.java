@@ -1,9 +1,6 @@
 package com.api.model;
 
 import lombok.Data;
-import org.springframework.context.annotation.Bean;
-
-import javax.management.MXBean;
 
 @Data
 public class Company {

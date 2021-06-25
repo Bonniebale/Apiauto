@@ -1,30 +1,29 @@
 package com.api.base;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.Properties;
+import com.api.utils.ConfigFile;
+import com.api.utils.HttpClientUtil;
+import org.testng.annotations.BeforeClass;
+
 
 public class BaseTest {
-//    public Properties properties;
-    public int RESPONSE_STATUS_CODE_200 = 200;
-    public int RESPONSE_STATUS_CODE_201 = 201;
-    public int RESPONSE_STATUS_CODE_404 = 404;
-    public int RESPONSE_STATUS_CODE_500 = 500;
     public static String demoPostUrl;
     public static String demoGetUrl;
+    protected HttpClientUtil httpClientUtil;
+    protected HttpClientUtil dmsClient; //新增分销系统专用client
 
-//    //写一个构造函数
-//    public void TestBase(){
-//        try {
-//            properties = new Properties();
-//            FileInputStream fileInputStream = new FileInputStream(System.getProperty("user.dir")+"src/main/java/com/api/config/config.properties");
-//            properties.load(fileInputStream);
-//            System.out.println(System.getProperty("user.dir"));
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
+
+    @BeforeClass
+    public void setUp() {
+        httpClientUtil = new HttpClientUtil();
+        httpClientUtil.login("测试专用02", "admin", "55A86C51427E48F486272A465CE15D73");
+        //httpClientUtil.login(ConfigFile.companyName,ConfigFile.userName,ConfigFile.password);
+    }
+
+
+    public HttpClientUtil loginDms() {
+        dmsClient = new HttpClientUtil();
+        dmsClient.login("测试专用02", "admin", "55A86C51427E48F486272A465CE15D73");
+        return dmsClient;
+    }
+
 }

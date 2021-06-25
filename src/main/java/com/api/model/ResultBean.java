@@ -1,2 +1,4 @@
-package com.api.model;public class ResultBean {
+package com.api.model;
+
+public class ResultBean {
 }

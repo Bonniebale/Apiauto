@@ -1,4 +1,4 @@
-package com.api.base;
+package com.api.store;
 
 import com.alibaba.fastjson.JSONObject;
 import com.api.base.BaseTest;
@@ -13,12 +13,17 @@ public class TradeAPIList extends BaseTest{
      * @param trade 订单的具体字段 K-V
      * @return
      */
-    public JSONObject saveTrade( String savePath,Map<String, Object> trade) {
+    public JSONObject saveTrade(HttpClientUtil httpClient, String savePath, Map<String, Object> trade) {
         String str = JSONObject.toJSONString(trade);
 
-        HttpClientUtil.ResultBean resultBean = httpClientUtil.postJson(savePath,str);
+        HttpClientUtil.ResultBean resultBean = httpClient.postJson(savePath,str);
 
         return ((JSONObject) resultBean.getData()).getJSONArray("list").getJSONObject(0);
+    }
+
+    public Object auditTrade(Long sid) {
+
+        return null;
     }
 
 

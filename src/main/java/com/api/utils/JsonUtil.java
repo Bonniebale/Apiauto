@@ -10,7 +10,7 @@ import com.alibaba.fastjson.JSONObject;
  *  /first_name 表示data数组下某一个元素下的json对象的名称为first_name
  *  @return，返回first_name这个json对象名称对应的值
  */
-public class TestUtil {
+public class JsonUtil {
 
     //JSON解析方法
     public static String getValueByJPath(JSONObject responseJson, String jpath){

@@ -1,4 +1,4 @@
-package com.api.restclient;
+package com.api.utils;
 
 
 import com.alibaba.fastjson.JSONObject;
@@ -23,28 +23,40 @@ import org.testng.annotations.Test;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.net.HttpURLConnection;
 import java.util.*;
 
 @Slf4j
-public class RestClient {
+public class HttpClientUtil {
     public static BasicCookieStore basicCookieStore;
     public static CloseableHttpClient httpClient;
     private String url = "https://puberp.superboss.cc";
 
 
-    //Get请求方法
+    /***
+     * 普通的get请求方法
+     * @param url
+     * @return
+     * @throws IOException
+     */
     public CloseableHttpResponse get(String url) throws IOException {
         //创建一个可关闭的httpClient对象
-        //CloseableHttpClient httpClient = HttpClients.createDefault();
         httpClient = HttpClients.createDefault();
         HttpGet httpGet = new HttpGet(url);
         //执行请求
+        log.info("开始执行get请求");
         CloseableHttpResponse httpResponse = httpClient.execute(httpGet);
         return httpResponse;
     }
 
-    //Get请求方法 带参数
-    public ResultBean get(String path, Map<String, String> params) throws Exception {
+
+    /***
+     * Get请求方法 带参数
+     * @param path uri
+     * @param params form-data 形式的参数list
+     * @return response结果
+     */
+    public ResultBean get(String path, Map<String, String> params) {
         List<NameValuePair> pairs = new ArrayList<>();
         if (params != null) {
             params.forEach((k, v) -> {
@@ -79,20 +91,12 @@ public class RestClient {
 //
 //    }
 
-    //post方法 json
-    public CloseableHttpResponse post(String url, HashMap<String,String> headerMap, String entityString) throws IOException {
-        httpClient = HttpClients.createDefault();
-        HttpPost httpPost = new HttpPost(url);
-        //设置参数
-        httpPost.setEntity(new StringEntity(entityString));
-        //加载请求头
-        for (Map.Entry<String,String> entry : headerMap.entrySet()){
-            httpPost.addHeader(entry.getKey(),entry.getValue());
-        }
-
-        return httpClient.execute(httpPost);
-    }
-
+    /***
+     * login方法
+     * @param companyName 公司名称
+     * @param userName 用户名称
+     * @param password 密码
+     */
     public void login(String companyName, String userName, String password) {
         basicCookieStore = new BasicCookieStore();
         httpClient = HttpClients.custom().setDefaultCookieStore(basicCookieStore).build();//将cookieStore设置到httpclient中
@@ -101,20 +105,27 @@ public class RestClient {
         params.put("userName", userName);
         params.put("password", password);
         ResultBean response = post( "/account/login", params);
-        System.out.println("@Test:"+response);
     }
+
 //     //调试代码专用
 //    public static void main(String[] args) throws Exception {
-//        RestClient client = new RestClient();
+//        HttpClientUtil client = new HttpClientUtil();
 //        client.login("咖啡测试3", "admin", "55A86C51427E48F486272A465CE15D73");
 //        ResultBean resultBean = client.get("/wms/config/get", null);
 //        System.out.println(resultBean.getResult());
 //        System.out.println(resultBean.getData());
 //    }
 
-    //post方法 form-data
-    public CloseableHttpResponse post(String path, HashMap<String, String> headerMap, List<NameValuePair> params) throws IOException {
-        Assert.notNull(httpClient, "请先登录");
+    /***
+     * post方法,通过form-data或者json串传参
+     * @param path uri 路径
+     * @param headerMap header信息
+     * @param params 请求参数
+     * @return httpResponse
+     * @throws IOException
+     */
+    public CloseableHttpResponse post(String path, Map<String, String> headerMap, List<NameValuePair> params, String jsonStr) throws IOException {
+        Assert.notNull(httpClient, "请先登录");//判断传进来的参数值是否不为空值，如果为空就抛出异常throw new IllegalArgumentException(msg)，代码如果不捕捉处理这个异常，代码不往下执行，不为空代码继续向下执行。
         HttpPost httpPost = new HttpPost(url + path);
         //添加请求参数
 
@@ -133,9 +144,18 @@ public class RestClient {
             httpPost.setEntity(formEntity);
         }
 
+        if (jsonStr != null && jsonStr.length() > 0) {
+            StringEntity stringEntity = new StringEntity(jsonStr, "utf-8");
+            httpPost.setEntity(stringEntity);
+        }
         return httpClient.execute(httpPost);
     }
 
+    /**
+     *设置默认的请求头信息
+     * @param message
+     * @return
+     */
     private Map<String, String> buildDefaultHeader(AbstractHttpMessage message) {
         Map<String, String> header = new HashMap<>();
         header.put("User-Agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36");
@@ -145,23 +165,12 @@ public class RestClient {
         return header;
     }
 
-    private ResultBean handleResponse(HttpResponse response) {
-        if (response.getStatusLine().getStatusCode() != 200) {
-            throw new IllegalArgumentException("访问异常，code=" + response.getStatusLine().getStatusCode());
-        }
-
-        String responseStr = "";
-        try {
-            responseStr = EntityUtils.toString(response.getEntity());
-            System.out.println(responseStr);
-        } catch (Exception e) {
-            log.error("解析失败", e);
-            throw new IllegalArgumentException("解析失败" + e.getMessage());
-        }
-
-        return JSONObject.parseObject(responseStr, ResultBean.class);
-    }
-
+    /****
+     *接收传递过来的url、form-data数据并执行处理response结果方法
+     * @param path 传递的URI
+     * @param params form-data params
+     * @return
+     */
     public ResultBean post(String path, Map<String, String> params)  {
         List<NameValuePair> pairs = new ArrayList<>();
         if (params != null) {
@@ -171,7 +180,7 @@ public class RestClient {
         }
 
         try {
-            CloseableHttpResponse response = post(path, null, pairs);
+            CloseableHttpResponse response = post(path, null, pairs, null);
             return handleResponse(response);
         } catch (Exception e) {
             log.error("访问报错", e);
@@ -180,57 +189,55 @@ public class RestClient {
 
     }
 
+    /***
+     *
+     * @param path
+     * @param jsonStr
+     * @return
+     */
+    public ResultBean postJson(String path, String jsonStr)  {
+
+        try {
+            Map<String, String> headerMap = new HashMap<>();
+            headerMap.put("content-type", "application/json");
+            CloseableHttpResponse response =post(path,headerMap,null,jsonStr);
+            return handleResponse(response);
+        } catch (Exception e) {
+            log.error("访问报错", e);
+            throw new IllegalArgumentException("访问报错" + e.getMessage());
+        }
+
+    }
+
+    /***
+     * 处理请求的返回结果
+     * @param response
+     * @return response中的具体的返回对象
+     */
+    private ResultBean handleResponse(HttpResponse response) {
+        if (response.getStatusLine().getStatusCode() != HttpURLConnection.HTTP_OK) {//200
+            throw new IllegalArgumentException("访问异常，code=" + response.getStatusLine().getStatusCode());
+        }
+
+        String responseStr = "";
+        try {
+            responseStr = EntityUtils.toString(response.getEntity());
+            System.out.println("responseStr："+responseStr);
+        } catch (Exception e) {
+            log.error("解析失败", e);
+            throw new IllegalArgumentException("解析失败" + e.getMessage());
+        }
+
+        return JSONObject.parseObject(responseStr, ResultBean.class);
+    }
+
     @Data
     public static class ResultBean implements Serializable {
+
         private Integer result;
         private String message;
         private Integer qTime;
         private Object data;
     }
 
-    //暂时做不到动态获取cookie并传递
-    //post方法 携带Cookie才能访问 json
-//    public CloseableHttpResponse  postWithCookies(String url, HashMap<String, String> headerMap, ArrayList cookieList,String entityString) throws IOException {
-//        //设置cookie信息
-//        basicCookieStore = new BasicCookieStore();
-//        for (Object x : cookieList){
-//            basicCookieStore.addCookie((Cookie) x);
-//        }
-//        CloseableHttpClient httpClient = HttpClients.custom().setDefaultCookieStore(basicCookieStore).build();
-//        //CloseableHttpClient httpClient = HttpClients.createDefault();
-//        HttpPost httpPost = new HttpPost();
-//        CloseableHttpResponse httpResponse = httpClient.execute(httpPost);
-//
-//        return httpResponse;
-//
-//    }
-
-//    public CloseableHttpResponse  postWithCookies(String url, HashMap<String, String> headerMap,
-//                                                  ArrayList cookieList,String entityString) throws IOException {
-//        //设置cookie信息
-//        basicCookieStore = new BasicCookieStore();
-//        basicCookieStore.addCookie((Cookie)cookieList);
-//        httpClient = HttpClients.custom().setDefaultCookieStore(basicCookieStore).build();
-//        //CloseableHttpClient httpClient = HttpClients.createDefault();
-//        HttpPost httpPost = new HttpPost(url);
-//        //设置payload
-//        httpPost.setEntity(new StringEntity(entityString));
-//        //加载请求头
-//        for (Map.Entry<String,String> entry : headerMap.entrySet()){
-//            httpPost.addHeader(entry.getKey(),entry.getValue());
-//        }
-//        CloseableHttpResponse httpResponse = httpClient.execute(httpPost);
-//
-//        return httpResponse;
-//
-//    }
-
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
 }

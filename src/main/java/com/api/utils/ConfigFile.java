@@ -6,18 +6,23 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 public class ConfigFile {
+    public static String companyName;
+    public static String userName;
+    public static String password;
+
     private static ResourceBundle bundle = ResourceBundle.getBundle("application", Locale.CHINA);
 
     public static String getUrl(InterfaceName name){
         String address = bundle.getString("pub.test.url");
         String uri ="";
         String testUrl;
-        if (name == InterfaceName.POSTAPI){
-            uri = bundle.getString("demo.post.uri");
-        }
-        if (name == InterfaceName.GETAPI){
-            uri = bundle.getString("demo.get.uri");
-        }
+//        //调试接口
+//        if (name == InterfaceName.POSTAPI){
+//            uri = bundle.getString("demo.post.uri");
+//        }
+//        if (name == InterfaceName.GETAPI){
+//            uri = bundle.getString("demo.get.uri");
+//        }
         if (name == InterfaceName.LOGIN){
             uri = bundle.getString("login");
         }
@@ -28,4 +33,5 @@ public class ConfigFile {
         testUrl = address + uri;
         return testUrl;
     }
+
 }

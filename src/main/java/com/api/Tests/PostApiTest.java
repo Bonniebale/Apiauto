@@ -5,12 +5,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.api.base.BaseTest;
 import com.api.model.InterfaceName;
 import com.api.model.User;
-import com.api.restclient.RestClient;
+import com.api.utils.HttpClientUtil;
 import com.api.utils.ConfigFile;
-import com.api.utils.TestUtil;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.util.EntityUtils;
-import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -19,7 +17,7 @@ import java.util.HashMap;
 
 public class PostApiTest extends BaseTest{
 
-    RestClient restClient;
+    HttpClientUtil httpClientUtil;
     CloseableHttpResponse closeableHttpResponse;
     BaseTest baseTest;
 
@@ -34,7 +32,7 @@ public class PostApiTest extends BaseTest{
     }
     @Test
     public void postAPITest() throws IOException {
-        restClient = new RestClient();
+        httpClientUtil = new HttpClientUtil();
         //准备请求头信息
         HashMap<String,String> headerMap = new HashMap<String,String>();
         headerMap.put("Content-Type","application/json");
@@ -44,7 +42,8 @@ public class PostApiTest extends BaseTest{
         String userJSONString = JSON.toJSONString(user);
         System.out.println(userJSONString);
 
-        closeableHttpResponse = restClient.post(BaseTest.demoPostUrl,userJSONString,headerMap);
+ //       closeableHttpResponse = httpClientUtil.post(BaseTest.demoPostUrl,headerMap,userJSONString);
+
         //验证状态码是不是200
         int statusCode = closeableHttpResponse.getStatusLine().getStatusCode();
 //        Assert.assertEquals(statusCode,RESPONSE_STATUS_CODE_201,"status code is not 201.");
@@ -54,11 +53,11 @@ public class PostApiTest extends BaseTest{
         JSONObject responseJson = JSON.parseObject(responseString);//是将str转化为相应的JSONObject对象
         System.out.println(responseString);
 
-//        String name = TestUtil.getValueByJPath(responseJson,"name");
-//        String job =TestUtil.getValueByJPath(responseJson,"job");
+//        String name = JsonUtil.getValueByJPath(responseJson,"name");
+//        String job =JsonUtil.getValueByJPath(responseJson,"job");
 //        Assert.assertEquals(name,"morpheus","name is not same");
 //        Assert.assertEquals(job,"leader","job is not same");
-//        restClient.get(BaseTest.demoPostUrl);
+//        httpClientUtil.get(BaseTest.demoPostUrl);
 
     }
 }
