@@ -1,6 +1,6 @@
 package com.api.base;
 
-import com.api.utils.ConfigFile;
+import com.api.config.CompanyConfig;
 import com.api.utils.HttpClientUtil;
 import org.testng.annotations.BeforeClass;
 
@@ -11,18 +11,17 @@ public class BaseTest {
     protected HttpClientUtil httpClientUtil;
     protected HttpClientUtil dmsClient; //新增分销系统专用client
 
-
     @BeforeClass
-    public void setUp() {
+    public void login() {
         httpClientUtil = new HttpClientUtil();
-        httpClientUtil.login("测试专用02", "admin", "55A86C51427E48F486272A465CE15D73");
-        //httpClientUtil.login(ConfigFile.companyName,ConfigFile.userName,ConfigFile.password);
+        httpClientUtil.login(CompanyConfig.COMPANY_NAME, CompanyConfig.USER_NAME, CompanyConfig.PASSWORD);
+        //httpClientUtil.login("测试专用02", "admin", "55A86C51427E48F486272A465CE15D73");
     }
 
 
     public HttpClientUtil loginDms() {
         dmsClient = new HttpClientUtil();
-        dmsClient.login("测试专用02", "admin", "55A86C51427E48F486272A465CE15D73");
+        dmsClient.login(CompanyConfig.DMS_COMPANY_NAME,CompanyConfig.DMS_USER_NAME,CompanyConfig.DMS_PASSWORD);
         return dmsClient;
     }
 

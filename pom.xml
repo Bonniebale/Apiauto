@@ -17,23 +17,39 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
             <version>2.5.0</version>
+            <exclusions>
+                <!-- 去掉默认配置，为了能使用lomback的log4j2-->
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-logging</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
-
+        <!--引入log4j2依赖-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-log4j2</artifactId>
+            <version>2.5.0</version>
+        </dependency>
+        <!--引入httpclient依赖-->
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
             <version>4.5.2</version>
         </dependency>
+        <!--引入lombok依赖-->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>1.18.20</version>
         </dependency>
+        <!--引入testng依赖-->
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
             <version>7.4.0</version>
         </dependency>
+        <!--引入extentreports依赖-->
         <dependency>
             <groupId>com.vimalselvam</groupId>
             <artifactId>testng-extentsreport</artifactId>
@@ -49,11 +65,13 @@
             <artifactId>extentreports</artifactId>
             <version>3.0.6</version>
         </dependency>
+        <!--引入fastjson依赖-->
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
             <version>1.2.76</version>
         </dependency>
+
     </dependencies>
 
 </project>

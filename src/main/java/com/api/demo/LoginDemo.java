@@ -35,7 +35,7 @@ public class LoginDemo extends BaseTest {
     }
 
     @Test(description = "登录接口")
-    public void login() throws IOException {
+    public void login2() throws IOException {
         httpClientUtil = new HttpClientUtil();
         //添加请求参数
         List<NameValuePair> params = new LinkedList<>();
