@@ -1,6 +1,6 @@
 package com.api.utils;
 
-import com.api.model.InterfaceName;
+import com.api.model.useless.InterfaceName;
 
 import java.util.Locale;
 import java.util.ResourceBundle;

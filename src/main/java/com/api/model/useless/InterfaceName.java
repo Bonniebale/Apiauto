@@ -1,5 +1,8 @@
-package com.api.model;
+package com.api.model.useless;
 
+/***
+ * 不使用该文件了
+ */
 public enum InterfaceName {
     POSTAPI,
     GETAPI,

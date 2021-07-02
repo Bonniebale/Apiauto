@@ -1,4 +1,4 @@
-package com.api.model;
+package com.api.model.useless;
 
 import lombok.Data;
 

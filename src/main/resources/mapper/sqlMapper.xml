@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace属性：表示命名空间，用来设定当前Mapper配置文件的唯一标识，将来在Java程序中通过namespace属性的值来定位到这个配置文件 -->
+<!-- namespace属性值设置的方式：名字可以随便取,但是推荐以相对应的Mapper接口的全类名,例如com.thr.mapper.UserMapper-->
+<mapper xmlns="http://mybatis.org/schema/mybatis-mapper" namespace="com.api.model.TradeOrder">
+
+    <select id="">
+
+    </select>
+</mapper>

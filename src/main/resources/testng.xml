@@ -1,14 +1,23 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
-<suite name="第一个接口测试的API">
+<suite name="分销系统">
     <test name="login">
         <classes>
-            <class name="com.api.demo.LoginDemo">
+<!--            <class name="com.api.Tests.LoginDemo">
                 <methods>
                     <include name="login"/>
                 </methods>
+            </class>-->
+            <class name="com.api.cases.TradeOrder">
+                <methods>
+                    <include name="addTradeOrder"/>
+                    <include name="dmsAddDistributor"/>
+                    <include name="saveTemplate"/>
+                    <include name="tradeAudit"/>
+                    <include name="searchTradeInfoBySid"/>
+
+                </methods>
             </class>
-            <class name="com.api.cases.TradeOrder"></class>
         </classes>
     </test>
     <listeners>

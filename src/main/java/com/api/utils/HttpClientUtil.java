@@ -3,7 +3,7 @@ package com.api.utils;
 
 import com.alibaba.fastjson.JSONObject;
 import com.api.config.EnvironmentConfig;
-import com.api.config.UrlConfig;
+import com.api.config.Interface;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpResponse;
@@ -253,7 +253,7 @@ public class HttpClientUtil {
         params.put("companyName", companyName);
         params.put("userName", userName);
         params.put("password", password);
-        ResultBean response = post( UrlConfig.LOGIN, params);
+        ResultBean response = post( Interface.LOGIN, params);
     }
 
     //     //调试代码专用

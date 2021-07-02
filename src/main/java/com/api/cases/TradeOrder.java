@@ -3,8 +3,8 @@ package com.api.cases;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.api.base.BaseTest;
+import com.api.config.Interface;
 import com.api.config.TradeOrderSidStatus;
-import com.api.config.UrlConfig;
 import com.api.store.TradeAPIList;
 import com.api.utils.HttpClientUtil;
 import com.beust.jcommander.internal.Lists;
@@ -45,7 +45,7 @@ public class TradeOrder extends BaseTest {
         Map<String, String> orderMap = new HashMap<>();
         orderMap.put("itemSysId","409313320475136");
         orderMap.put("skuSysId","-1");
-        orderMap.put("num","1000000000");
+        orderMap.put("num","1");
         orderMap.put("outerId","Orange");
         orderMap.put("title","橘橘橘");
         orderMap.put("payment","345.56");
@@ -56,25 +56,22 @@ public class TradeOrder extends BaseTest {
         params.put("orders", orders);
         params.put("payment","345.56");
         params.put("totalFee","345.56");
-//        System.out.println("params:"+params);
-        //trade = tradeAPIList.saveTrade(httpClientUtil,savePath,params);
 
-        //需要抛出异常的做法
-        HttpClientUtil.ApiException exception = null;
-        try {
-            trade = tradeAPIList.saveTrade(httpClientUtil,UrlConfig.SAVE_TRADE,params);
-        } catch (HttpClientUtil.ApiException e) {
-            exception = e;
-        }
-
-        Assert.assertNotNull(exception);
-        Assert.assertEquals(exception.getSubCode(), Integer.valueOf(101));
-        Assert.assertTrue(exception.getMessage().contains("库存不足"));
-        //trade = tradeAPIList.saveTrade(httpClientUtil,UrlConfig.saveTradeUrl,params);//用这个会提示空指针,不是同一个httpclient的原因？---需要传递该
+//        //*****需要抛出异常的做法
+//        HttpClientUtil.ApiException exception = null;
+//        try {
+//            trade = tradeAPIList.saveTrade(httpClientUtil,Interface.SAVE_TRADE,params);
+//        } catch (HttpClientUtil.ApiException e) {
+//            exception = e;
+//        }
+//
+//        Assert.assertNotNull(exception);
+//        Assert.assertEquals(exception.getSubCode(), Integer.valueOf(101));
+//        Assert.assertTrue(exception.getMessage().contains("库存不足"));
+        trade = tradeAPIList.saveTrade(httpClientUtil, Interface.SAVE_TRADE,params);
+        //trade = tradeAPIList.saveTrade(httpClientUtil,Interface.saveTradeUrl,params);//用这个会提示空指针,不是同一个httpclient的原因？---需要传递该
         //JSONObject trade = saveTrade(params);
         System.out.println(trade.get("sid"));
-
-
     }
 
 //    @Test(dependsOnMethods = {"addTradeOrder"},description = "新增分销属性")
@@ -87,7 +84,7 @@ public class TradeOrder extends BaseTest {
         Map<String, String> params = new HashMap<>();
         params.put("sids",sids);
 
-        HttpClientUtil.ResultBean resultBean = httpClientUtil.post(UrlConfig.DMS_ADD_DISTRIBUTOR,params);
+        HttpClientUtil.ResultBean resultBean = httpClientUtil.post(Interface.DMS_ADD_DISTRIBUTOR,params);
         JSONObject data = (JSONObject) resultBean.getData();
         JSONArray list = data.getJSONArray("list");
         Assert.assertEquals(list.getJSONObject(0).getString("convertType"),"1","订单号"+sids+"不是分销订单");
@@ -96,7 +93,7 @@ public class TradeOrder extends BaseTest {
         Map<String, String> dmsParams = new HashMap<>();
         dmsParams.put("sids",sids);
         dmsParams.put("destId","31515");
-        trade = (JSONObject) tradeAPIList.form(httpClientUtil,UrlConfig.DMS_FORCE_DISTRIBUTOR,dmsParams);
+        trade = (JSONObject) tradeAPIList.form(httpClientUtil, Interface.DMS_FORCE_DISTRIBUTOR,dmsParams);
         Assert.assertEquals(trade.getString("destName"),"API","供销商名称不是API");
     }
 
@@ -120,7 +117,7 @@ public class TradeOrder extends BaseTest {
         params.put("templateId","48671");
         params.put("taobaoId","168357705073152");
         System.out.println("params:"+params);
-        trade = (JSONObject) tradeAPIList.saveCloudTemplate(httpClientUtil,UrlConfig.TRADE_SAVE_CLOUD,params);
+        trade = (JSONObject) tradeAPIList.saveCloudTemplate(httpClientUtil, Interface.TRADE_SAVE_CLOUD,params);
         Assert.assertEquals(trade.getString("templateName"),"K_圆通蓝牙一联单","保存的快递模板不是K_圆通蓝牙一联单");
 
     }
@@ -133,35 +130,33 @@ public class TradeOrder extends BaseTest {
         params.put("sids",sids);
 
         //审核订单
-        trade = (JSONObject) tradeAPIList.auditTrade(httpClientUtil,UrlConfig.TRADE_AUDIT,params);
+        trade = (JSONObject) tradeAPIList.auditTrade(httpClientUtil, Interface.TRADE_AUDIT,params);
         Assert.assertEquals(trade.getString("sysStatus"), TradeOrderSidStatus.WAIT_DEST_SEND_GOODS,"订单"+sids+"状态不是待供销商发货，审核失败");
-
 
     }
 
-    @Test(dependsOnMethods = {"tradeAudit"},description = "根据订单id查询订单数据")//根据系统订单号查询的form-data，根据平台订单号查询是json
+    @Test(dependsOnMethods = {"tradeAudit"},description = "根据订单id查询订单数据")
     public void searchTradeInfoBySid() {
-//        loginDms();
+        loginDms();
         // dmsClient.post();
 
-        String sids = String.valueOf(trade.get("sid"));
+        String tid = String.valueOf(trade.get("sid"));
         //添加请求参数
 //        JSONObject params = new JSONObject();//json用这个
         Map<String, String> params = new HashMap<>();
-        params.put("sids",sids);
+        params.put("tid",tid);
 //        String jsonStr = JSONObject.toJSONString(params);
+        trade = (JSONObject) tradeAPIList.form(dmsClient, Interface.SEARCH_TRADE,params);
+        Assert.assertEquals(trade.getJSONArray("tids").getString(0),tid,"平台订单号不为"+tid);//根据tid查出来的返回值中tid是一个数组
+        System.out.println("tid="+trade.getJSONArray("tids").getString(0));
+        System.out.println("tid="+trade.getString("tids"));
+        System.out.println("sid="+trade.getString("sid"));
 
-        //发送请求获取结果
-        HttpClientUtil.ResultBean resultBean = dmsClient.post(UrlConfig.TRADE_SEARCH_SIDS,params);
-
-        JSONObject data = (JSONObject) resultBean.getData();
-        JSONArray list = data.getJSONArray("list");
-        Assert.assertEquals(list.getJSONObject(0).getString("sid"),sids,"订单号不是"+sids);
+//        //发送请求获取结果
+//        HttpClientUtil.ResultBean resultBean = dmsClient.post(Interface.SEARCH_TRADE,params);
+//
+//        JSONObject data = (JSONObject) resultBean.getData();
+//        JSONArray list = data.getJSONArray("list");
+//        Assert.assertEquals(list.getJSONObject(0).getString("sid"),sids,"订单号不是"+sids);
     }
-
-//    @Test(description = "group")
-//    public void testGroup() {
-//        searchTradeInfoBySid();
-//        saveTemplate();
-//    }
 }

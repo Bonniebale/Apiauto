@@ -1,9 +1,9 @@
-package com.api.demo;
+package com.api.Tests;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.api.base.BaseTest;
-import com.api.model.InterfaceName;
+import com.api.model.useless.InterfaceName;
 import com.api.utils.HttpClientUtil;
 import com.api.utils.ConfigFile;
 import org.apache.http.NameValuePair;
