@@ -2,20 +2,19 @@ package com.api.model;
 
 import lombok.Data;
 
-import java.sql.Types;
-import java.util.Date;
-
 /***
  * 订单中所有可能遇到的字段，与database一一对应
  */
 @Data
-public class TradeOrder {
-
+public class TradeOrderModel {
     /**
-     * 分销金额
+     * 用例编号
      */
-//    @Column(name = "sale_price", type = Types.VARCHAR)
-    private String saleFee;
+    private int id;
+    /**
+     * 用例描述
+     */
+    private String description;
 
     /**
      * 收件人姓名
@@ -46,13 +45,6 @@ public class TradeOrder {
      * 收件人手机号
      */
     private String receiverMobile;
-
-    /**
-     * 订单来源于哪里 分销系统里记为分销商id（companyId）
-     */
-//        @Column(name = "source_id", type = Types.BIGINT)
-    private Long sourceId;
-
     /**
      * 订单归属于哪里 分销系统里记为供销商id（companyId）
      */
@@ -65,43 +57,19 @@ public class TradeOrder {
     private String sourceName;
 
     /**
-     * 订单归属于哪里 分销系统里记为供销商nname（不持久化）
+     * 订单归属于哪里 分销系统里记为供销商name（不持久化）
      */
     private String destName;
-//    /**
-//     * 如果是供销订单，这个值代表对应的分销订单
-//     * 如果是分销订单，这个值代表对应的供销订单
-//     */
-//    private Trade sourceTrade;
-    /**
-     * 供销订单用
-     */
-    private Integer wlbTemplateType;
-    /**
-     * 分销订单是否在系统上传（供销订单用）
-     */
-    private Integer fxIsUpload;
-
-    /**
-     * 供销订单使用,分销作废来源
-     * 0,取消分销属性
-     * 1，分销订单作废
-     */
-    private Integer cancelFrom;
-
-    /**
-     * 是否是取消分销属性触发的订单同步，如果是1，则不需要匹配供应商，因为是取消分销属性
-     */
-    private Integer isCancelDistributorAttribute;
-
-
-
-//    private String taxFee;
     /**
      * 快递模板编号
      */
 //        @Column(name = "template_id", type = Types.BIGINT)
-    private Long templateId;
+//    private Long templateId;
+    private int templateId;
+    /**
+     * 模板名称,不做持久化处理
+     */
+    private String templateName;
 
     /**
      * 快递模版类型，0表示普通快递，1表示电子面单快递，默认为0
@@ -120,7 +88,8 @@ public class TradeOrder {
      * 系统订单号
      */
 //        @Column(name = "sid", type = Types.BIGINT, key = true)
-    private Long sid;
+//    private Long sid;
+    private String sid;
 
     /**
      * 店铺用户编号
@@ -133,19 +102,6 @@ public class TradeOrder {
     //@Column(name = "company_id", type = Types.BIGINT)@Column 用来标识实体类中属性与数据表中字段的对应关系
     //
     private Long companyId;
-
-    /**
-     * 平台的卖家账户
-     */
-//        @Column(name = "taobao_id", type = Types.BIGINT)
-    private Long taobaoId;
-
-//    /**
-//     * 订单来自哪个平台，例如 tb(淘宝或者天猫平台),jd(京东平台),sys(系统手工订单)
-//     */
-////        @Column(name = "source", type = Types.VARCHAR)
-//    private String source;
-
 
     /**
      * 平台订单号
@@ -174,74 +130,129 @@ public class TradeOrder {
     //@Column(name = "warehouse_id", type = Types.BIGINT)
     private Long warehouseId;
     /**
-     * 快递公司的编号，不做持久化处理
+     * 平台的卖家账户
      */
-    private Long expressCompanyId;
+//        @Column(name = "taobao_id", type = Types.BIGINT)
+    private Long taobaoId;
 
-    /**
-     * 模板名称,不做持久化处理
-     */
-    private String templateName;
-
-    /**
-     * 需要反审核的分销/供销订单
-     */
-    private boolean fxNeedUnaudit;
-
-    /**
-     *
-     */
-    private String fxSysStatus;
-
-    /**
-     * 分销订单是否撤销发货
-
-     */
-    private boolean fxCancelConsign;
-
-    /**
-     * 是否是分销订单重推过来的（供销订单用）
-     */
-    private boolean isFxReAudit;
-
-    /**
-     * 分销商支付方式，目前仅用于档口订单excel导入
-     */
-    private String fxPayType;
+//    /**
+//     * 订单来源于哪里 分销系统里记为分销商id（companyId）
+//     */
+////        @Column(name = "source_id", type = Types.BIGINT)
+//    private Long sourceId;
 
 
-    /**
-     * 订单属于soure or dest ,0表示正常订单，1表示source，2表示dest
-     */
-//        @Column(name = "belong_type", type = Types.INTEGER)
-    private Integer belongType;
+//    /**
+//     * 如果是供销订单，这个值代表对应的分销订单
+//     * 如果是分销订单，这个值代表对应的供销订单
+//     */
+//    private Trade sourceTrade;
+//    /**
+//     * 供销订单用
+//     */
+//    private Integer wlbTemplateType;
+//    /**
+//     * 分销订单是否在系统上传（供销订单用）
+//     */
+//    private Integer fxIsUpload;
+//
+//    /**
+//     * 供销订单使用,分销作废来源
+//     * 0,取消分销属性
+//     * 1，分销订单作废
+//     */
+//    private Integer cancelFrom;
+//
+//    /**
+//     * 是否是取消分销属性触发的订单同步，如果是1，则不需要匹配供应商，因为是取消分销属性
+//     */
+//    private Integer isCancelDistributorAttribute;
 
-    /**
-     * 订单级别的系统异常，参考itemExcep 目前不明确供销商”、“分销商反审核”、“分销商未付款“
-     */
-//        @Column(name = "excep", type = Types.BIGINT)
-    private Long excep;
-    /**
-     * 订单实收金额
-     */
-    private Double tradePurchaseAmount;
-    /**
-     * 平台支付金额
-     */
-    private Double platformPaymentAmount;
-    /**
-     * 手工支付金额
-     */
-    private Double manualPaymentAmount;
 
-    /**
-     * 毛利润
-     */
-    private Double grossProfit;
-    /**
-     * 供销订单流水号
-     */
-    private Long flowNumber;
+
+//    private String taxFee;
+
+
+
+
+//    /**
+//     * 订单来自哪个平台，例如 tb(淘宝或者天猫平台),jd(京东平台),sys(系统手工订单)
+//     */
+////        @Column(name = "source", type = Types.VARCHAR)
+//    private String source;
+
+
+//    /**
+//     * 快递公司的编号，不做持久化处理
+//     */
+//    private Long expressCompanyId;
+
+
+//
+//    /**
+//     * 需要反审核的分销/供销订单
+//     */
+//    private boolean fxNeedUnaudit;
+//
+//    /**
+//     *
+//     */
+//    private String fxSysStatus;
+//
+//    /**
+//     * 分销订单是否撤销发货
+//
+//     */
+//    private boolean fxCancelConsign;
+//
+//    /**
+//     * 是否是分销订单重推过来的（供销订单用）
+//     */
+//    private boolean isFxReAudit;
+
+//    /**
+//     * 分销商支付方式，目前仅用于档口订单excel导入
+//     */
+//    private String fxPayType;
+
+
+//    /**
+//     * 订单属于soure or dest ,0表示正常订单，1表示source，2表示dest
+//     */
+////        @Column(name = "belong_type", type = Types.INTEGER)
+//    private Integer belongType;
+//
+//    /**
+//     * 订单级别的系统异常，参考itemExcep 目前不明确供销商”、“分销商反审核”、“分销商未付款“
+//     */
+////        @Column(name = "excep", type = Types.BIGINT)
+//    private Long excep;
+//    /**
+//     * 订单实收金额
+//     */
+//    private Double tradePurchaseAmount;
+//    /**
+//     * 平台支付金额
+//     */
+//    private Double platformPaymentAmount;
+//    /**
+//     * 手工支付金额
+//     */
+//    private Double manualPaymentAmount;
+//
+//    /**
+//     * 毛利润
+//     */
+//    private Double grossProfit;
+//    /**
+//     * 供销订单流水号
+//     */
+//    private Long flowNumber;
+//    /**
+//     * 分销金额
+//     */
+////    @Column(name = "sale_price", type = Types.VARCHAR)
+//    private String saleFee;
 //    /**
 //     * 收件人固话
 //     */
@@ -331,16 +342,16 @@ public class TradeOrder {
 //     */
 //    private String oldSysStatus;
 
-    /**
-     * 库存状态
-     */
-//        @Column(name = "stock_status", type = Types.VARCHAR)
-    private String stockStatus;
-
-    /**
-     * 做库存更新之前的库存状态，不做持久化
-     */
-    private String oldStockStatus;
+//    /**
+//     * 库存状态
+//     */
+////        @Column(name = "stock_status", type = Types.VARCHAR)
+//    private String stockStatus;
+//
+//    /**
+//     * 做库存更新之前的库存状态，不做持久化
+//     */
+//    private String oldStockStatus;
 
 //    /**
 //     * 当前有效的商品数,部分发货的订单只包含尚未发货的商品数（非持久化字段）
@@ -1266,30 +1277,6 @@ public class TradeOrder {
 //     * 延迟返货时间
 //     */
 //    private Integer delayShipTime;
-
-
-
-
-
-    @Override
-    public String toString() {
-        return "Trade{" +
-                "userId=" + userId +
-//                ", source='" + source + '\'' +
-                ", sid=" + sid +
-                ", tid='" + tid + '\'' +
-                ", sysStatus='" + sysStatus + '\'' +
-                ", stockStatus='" + stockStatus + '\'' +
-                ", status='" + status + '\'' +
-//                ", tagName=" + tagName +
-//                ", tags=" + tags +
-//                ", tagIds=" + tagIds +
-//                ", sysMemo=" + sysMemo +
-//                ", exceptIds=" + exceptIds +
-                ", warehouseId=" + warehouseId +
-                "} ";
-    }
-
 
 
 

@@ -177,11 +177,9 @@ public class HttpClientUtil {
 
     @Data
     public static class ApiException extends RuntimeException implements Serializable {
-        private Integer result;
-
-        private Integer subCode;
-
         private Object data;
+        private Integer result;
+        private Integer subCode;
 
         public ApiException() {
 

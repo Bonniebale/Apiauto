@@ -161,17 +161,17 @@ public class Product {
 //        @Column(name = "status", type = Types.INTEGER)
 //        private Integer status;
 //
-//        /**
-//         * 商品的商家编码
-//         */
+        /**
+         * 商品的商家编码
+         */
 //        @Column(name = "outer_id", type = Types.VARCHAR)
-//        private String outerId;
+        private String outerId;
 //
-//        /**
-//         * 淘宝的商品库存
-//         */
+        /**
+         * 淘宝的商品库存
+         */
 //        @Column(name = "num", type = Types.BIGINT)
-//        private Long num;
+        private Long num;
 //
 //        /**
 //         * 库存警戒值
