@@ -15,6 +15,19 @@ public class TradeBaseMethods {
     JSONObject resultJSONObject = new JSONObject();
 
     /**
+     * 指定下载
+     * @param httpClient
+     * @return 订单的sid
+     */
+    public Object single(HttpClientUtil httpClient, String userId, String tid){
+        Map<String, String> params = new HashMap<>();
+        params.put("userId", userId);
+        params.put("tid", tid);
+        resultJSONObject = (JSONObject) tradeAPIList.formData(httpClient,Interface.SINGLE_DOWNLOAD,params);
+        return resultJSONObject.getString("sid");
+    }
+
+    /**
      * 新增手工订单
      * @param httpClient
      * @return 订单的sid
@@ -22,7 +35,7 @@ public class TradeBaseMethods {
     public Object saveTrade(HttpClientUtil httpClient) {
         //添加请求参数
         JSONObject params = new JSONObject();
-        params.put("receiverName","20210706");
+        params.put("receiverName","20210719");
         params.put("receiverState","浙江省");
         params.put("receiverCity","杭州市");
         params.put("receiverDistrict","上城区");
@@ -62,7 +75,18 @@ public class TradeBaseMethods {
         params.put("sids",sids);
         params.put("templateId","48671");
         params.put("taobaoId","168357705073152");
-        tradeAPIList.saveCloudTemplate(httpClient, Interface.TRADE_SAVE_CLOUD,params);
+        tradeAPIList.formData(httpClient, Interface.TRADE_SAVE_CLOUD,params);
+    }
+
+    public void getExpressId(HttpClientUtil httpClient,String sids, String tid){
+        Map<String, String> params = new HashMap<>();
+        params.put("sids",sids);
+        params.put("warehouseId","43509");
+        params.put("tids",tid);
+        params.put("templateId","71928");
+        params.put("taobaoId","34457");
+        tradeAPIList.formData(httpClient, Interface.GET_EXPRESS_ID,params);
+
     }
 
     /**

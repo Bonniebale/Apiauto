@@ -6,6 +6,7 @@ import com.api.base.BaseTest;
 import com.api.store.TradeBaseMethods;
 import com.api.config.TradeOrderSidStatus;
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -18,34 +19,46 @@ public class DmsAudit extends BaseTest {
     JSONObject resultJSONObject = new JSONObject();
     String sid;
 
+
     @BeforeMethod
     public void setup(){
         //新增订单
         sid = (String) tradeBaseMethods.saveTrade(httpClientUtil);
-        System.out.println("sid:"+sid);
         //新增分销属性
         dmsBaseMethods.dmsAddDistributor(httpClientUtil,sid);
         //强制指定供应商
         dmsBaseMethods.forceDistributor(httpClientUtil,sid,"31515");
         //保存快递模板
         tradeBaseMethods.saveTemplate(httpClientUtil,sid);
+        //设置店铺代发范围
+        dmsBaseMethods.UpdateSupplierInfo(httpClientUtil,"2411","API","34457,47060,76803");
+
+    }
+
+    public void tearDown(){
+
+    }
+    @BeforeClass
+    public void beforeClass(){
+
+
+
     }
 
     /***
      * 订单所属店铺是否在允许的代发店铺范围
      */
-//    @Test(groups = "auditSuccess", description = "订单审核校验代发店铺-成功")
-    public void auditInsteadUserSuccess(){
-        //设置店铺代发范围
-        dmsBaseMethods.UpdateSupplierInfo(httpClientUtil,"2411","API","34457,47060,76803");
+    @Test(groups = "auditSuccess", description = "订单审核校验代发店铺-成功")
+    public void InsteadUserSuccess(){
+
         //审核
         resultJSONObject = (JSONObject) tradeBaseMethods.audit(httpClientUtil,sid,"success");
         //判断审核是否成功
         Assert.assertEquals(resultJSONObject.getString("sysStatus"), TradeOrderSidStatus.WAIT_DEST_SEND_GOODS,"订单审核失败");
     }
 
-//    @Test(groups = "auditFail", description = "订单审核校验代发店铺-失败")
-    public void auditInsteadUserFail(){//订单的店铺是34457
+    @Test(groups = "auditFail", description = "订单审核校验代发店铺-失败")
+    public void InsteadUserFail(){//订单的店铺是34457
         //设置店铺代发范围
         dmsBaseMethods.UpdateSupplierInfo(httpClientUtil,"2411","API","47060,76803");
         //审核
@@ -54,22 +67,44 @@ public class DmsAudit extends BaseTest {
         //判断审核是否成功
         String errorMsg = resultJSONObject.getString("errorMsg");
         Assert.assertTrue(errorMsg.contains("不属于供销商的代发店铺"));
+        //判断完失败的情况后如何重置条件？
 
     }
 
     /**
      * 商品在供销商处是否允许分销
      */
-    @Test(groups = "auditSuccess", description = "商品在供销商处允许分销-成功")
-    public void auditAllowProduct(){
-        //设置商品允许分销
+    @Test(groups = "auditFail", description = "商品在供销商处禁止分销")
+    public void forceProduct(){
+        loginDms();
+        System.out.println("dmsClient登录");
 
+        //供销商设置商品禁止分销
+        dmsBaseMethods.saveOptItemRule(httpClientUtil,"Orange","forbidSaleOuter");
+        //审核
+        resultJSONObject = (JSONObject) tradeBaseMethods.audit(httpClientUtil,sid,"fail");
+        //判断审核是否成功
+        String errorMsg = resultJSONObject.getString("errorMsg");
+        Assert.assertTrue(errorMsg.contains("商品不允许分销"));
     }
+
+    @Test(groups = "auditSuccess", description = "商品在供销商处允许分销")
+    public void auditAllowProduct(){
+        loginDms();
+        //供销商设置商品允许分销
+        dmsBaseMethods.saveOptItemRule(httpClientUtil,"Orange","allowSaleOuter");
+        //审核
+        resultJSONObject = (JSONObject) tradeBaseMethods.audit(httpClientUtil,sid,"success");
+        //判断审核是否成功
+        Assert.assertEquals(resultJSONObject.getString("sysStatus"), TradeOrderSidStatus.WAIT_DEST_SEND_GOODS,"订单审核失败");
+    }
+
     /**
      * 允许推送分销价为0的商品配置
      */
     @Test(groups = "auditSuccess", description = "订单审核校验代发店铺-成功")
     public void auditSalePriceZero(){
+        //设置允许推送分销价=0
 
     }
     /**

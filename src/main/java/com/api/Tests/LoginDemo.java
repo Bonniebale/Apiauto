@@ -52,7 +52,7 @@ public class LoginDemo extends BaseTest {
         HashMap<String,String> headerMap = new HashMap<String,String>();
         headerMap.put("Content-Type","application/x-www-form-urlencoded");
 
-        closeableHttpResponse = httpClientUtil.post(url,headerMap,params, null);
+//        closeableHttpResponse = httpClientUtil.post(url,params);//报错了
 
         //直接写死也行
        // final String requestParams = "companyName=%E6%B5%8B%E8%AF%95%E4%B8%93%E7%94%A802&userName=admin&password=55A86C51427E48F486272A465CE15D73&salt=1624335991904&validationCode=&phoneVerifyCode=&deviceId=jd_D77BXUVRJXVIVFYY33MN2K7PL76S7UJELBQ2FZRNPQR2Y367QLVAQJU2V7M5YITL26ESIH3VLKQS36GBJ2RD5NKOTU%2Cvipjit_1624335991902_59e9e9e6252b9ca632dd6cb5a62e09b2";
@@ -60,7 +60,7 @@ public class LoginDemo extends BaseTest {
 
         //验证状态码是不是200
         int statusCode = closeableHttpResponse.getStatusLine().getStatusCode();
-        Assert.assertEquals(statusCode, HttpURLConnection.HTTP_OK,"status code is not 200.");
+        Assert.assertEquals(statusCode, HttpURLConnection.HTTP_OK,"status code is not 200.");//200
         System.out.println("statusCode:"+statusCode);
 
         String status ;

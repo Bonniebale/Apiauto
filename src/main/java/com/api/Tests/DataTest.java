@@ -2,7 +2,7 @@ package com.api.Tests;
 
 import com.alibaba.fastjson.JSONObject;
 import com.api.base.BaseTest;
-import com.api.model.TradeOrderModel;
+import com.api.model.TradeModel;
 import com.api.store.TradeAPIList;
 import com.api.utils.DatabaseUtil;
 import org.apache.ibatis.session.SqlSession;
@@ -63,7 +63,7 @@ public class DataTest extends BaseTest {
 //
 //    }
     @Test(dataProvider = "saveTemplate",description = "保存快递模板")//data[1]/[0]/templateName data-trades-[0]/templateName=K_圆通一联单
-    public void saveTemplate(TradeOrderModel tradeOrderModer) throws IOException {
+    public void saveTemplate(TradeModel tradeOrderModer) throws IOException {
         JSONObject trade = new JSONObject();
         TradeAPIList tradeAPIList = new TradeAPIList();
 //        sqlSession = DatabaseUtil.getSqlSession();

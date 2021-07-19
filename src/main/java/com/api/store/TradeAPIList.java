@@ -1,9 +1,10 @@
 package com.api.store;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.api.base.BaseTest;
 import com.api.utils.HttpClientUtil;
+
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -19,7 +20,7 @@ public class TradeAPIList extends BaseTest{
     }
 
     /***
-     * content-type为json形式且返回为data-list集合
+     * content-type为json的POST请求，返回为data-list集合
      * @param httpClient httpclient也需要传递过来， 不然会报空指针
      * @param path url-path 参数
      * @param params trade 订单的具体字段 K-V
@@ -32,6 +33,7 @@ public class TradeAPIList extends BaseTest{
 
         return getPageList(resultBean).get(0);
     }
+
     public JSONObject jsonGetData(HttpClientUtil httpClient, String path, Map<String, Object> params) {//json
         String str = JSONObject.toJSONString(params);
 
@@ -41,7 +43,7 @@ public class TradeAPIList extends BaseTest{
     }
 
     /**
-     * content-type为form形式且返回为data-list集合
+     * content-type为form的POST请求，返回为data-list集合
      * @param httpClient
      * @param path url-path 参数
      * @param params 请求参数k-v
@@ -73,6 +75,7 @@ public class TradeAPIList extends BaseTest{
 
     /***
      * 保存云打印快递模板 form
+     * 尽量不使用该方法
      * @param httpClient
      * @param path
      * @param params
@@ -81,13 +84,12 @@ public class TradeAPIList extends BaseTest{
     public Object saveCloudTemplate(HttpClientUtil httpClient, String path, Map<String, String> params){//form-data
         HttpClientUtil.ResultBean resultBean = httpClient.post(path,params);
 
-        //return ((JSONObject)resultBean.getData()).getJSONArray("list").getJSONObject(0);
         return ((JSONObject)resultBean.getData()).getJSONArray("trades").getJSONObject(0);
 
     }
 
     /***
-     * content-type为form response中返回data下字段较少
+     * content-type为form的POST请求，response中返回data下字段较少
      * @param httpClient
      * @param path
      * @param params
@@ -99,7 +101,6 @@ public class TradeAPIList extends BaseTest{
         return ((JSONObject)resultBean.getData());
 
     }
-
 
 
 

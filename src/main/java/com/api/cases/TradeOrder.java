@@ -5,14 +5,13 @@ import com.alibaba.fastjson.JSONObject;
 import com.api.base.BaseTest;
 import com.api.config.Interface;
 import com.api.config.TradeOrderSidStatus;
-import com.api.model.TradeOrderModel;
+import com.api.model.TradeModel;
 import com.api.store.TradeAPIList;
 import com.api.utils.DatabaseUtil;
 import com.api.utils.HttpClientUtil;
 import com.beust.jcommander.internal.Lists;
 import org.apache.ibatis.session.SqlSession;
 import org.testng.Assert;
-import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
@@ -25,7 +24,7 @@ public class TradeOrder extends BaseTest {
     JSONObject tradeJSONObject = new JSONObject();
     SqlSession sqlSession;
 //    SqlSession sqlSession = DatabaseUtil.getSqlSession();
-    TradeOrderModel tradeOrderModer = new TradeOrderModel();
+    TradeModel tradeOrderModer = new TradeModel();
 
     @Test(description = "新增手工订单")
     public void addTradeOrder() {
@@ -163,7 +162,7 @@ public class TradeOrder extends BaseTest {
         Map<String, String> params = new HashMap<>();
         params.put("tid",tid);
 //        String jsonStr = JSONObject.toJSONString(params);
-        tradeJSONObject = (JSONObject) tradeAPIList.form(dmsClient, Interface.SEARCH_TRADE,params);
+        tradeJSONObject = (JSONObject) tradeAPIList.form(httpClientUtil, Interface.SEARCH_TRADE,params);
         Assert.assertEquals(tradeJSONObject.getJSONArray("tids").getString(0),tid,"平台订单号不为"+tid);//根据tid查出来的返回值中tid是一个数组
         System.out.println("tid="+tradeJSONObject.getJSONArray("tids").getString(0));
         System.out.println("tid="+tradeJSONObject.getString("tids"));

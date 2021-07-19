@@ -3,10 +3,10 @@
 
 <!-- namespace属性：表示命名空间，用来设定当前Mapper配置文件的唯一标识，将来在Java程序中通过namespace属性的值来定位到这个配置文件 -->
 <!-- namespace属性值设置的方式：名字可以随便取,但是推荐以相对应的Mapper接口的全类名,例如com.thr.mapper.UserMapper-->
-<mapper namespace="com.api.model.TradeOrderModel">
+<mapper namespace="com.api.model.TradeModel">
 
     <!--测试mybatis框架，验证保存模板-->
-    <select id="saveTemplate" parameterType="Integer" resultType="com.api.model.TradeOrderModel">
+    <select id="saveTemplate" parameterType="Integer" resultType="com.api.model.TradeModel">
         select * from TradeOrder where id=#{id}
     </select>
 </mapper>

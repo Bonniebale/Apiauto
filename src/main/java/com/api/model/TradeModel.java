@@ -6,7 +6,7 @@ import lombok.Data;
  * 订单中所有可能遇到的字段，与database一一对应
  */
 @Data
-public class TradeOrderModel {
+public class TradeModel {
     /**
      * 用例编号
      */
