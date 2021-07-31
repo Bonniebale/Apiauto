@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.api.store.DmsBaseMethods;
 import com.api.base.BaseTest;
 import com.api.store.TradeBaseMethods;
-import com.api.config.TradeOrderSidStatus;
+import com.api.config.TradeStatus;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -48,16 +48,16 @@ public class DmsAudit extends BaseTest {
     /***
      * 订单所属店铺是否在允许的代发店铺范围
      */
-    @Test(groups = "auditSuccess", description = "订单审核校验代发店铺-成功")
+//    @Test(groups = "auditSuccess", description = "订单审核校验代发店铺-成功")
     public void InsteadUserSuccess(){
 
         //审核
         resultJSONObject = (JSONObject) tradeBaseMethods.audit(httpClientUtil,sid,"success");
         //判断审核是否成功
-        Assert.assertEquals(resultJSONObject.getString("sysStatus"), TradeOrderSidStatus.WAIT_DEST_SEND_GOODS,"订单审核失败");
+        Assert.assertEquals(resultJSONObject.getString("sysStatus"), TradeStatus.WAIT_DEST_SEND_GOODS,"订单审核失败");
     }
 
-    @Test(groups = "auditFail", description = "订单审核校验代发店铺-失败")
+//    @Test(groups = "auditFail", description = "订单审核校验代发店铺-失败")
     public void InsteadUserFail(){//订单的店铺是34457
         //设置店铺代发范围
         dmsBaseMethods.UpdateSupplierInfo(httpClientUtil,"2411","API","47060,76803");
@@ -76,11 +76,8 @@ public class DmsAudit extends BaseTest {
      */
     @Test(groups = "auditFail", description = "商品在供销商处禁止分销")
     public void forceProduct(){
-        loginDms();
-        System.out.println("dmsClient登录");
-
         //供销商设置商品禁止分销
-        dmsBaseMethods.saveOptItemRule(httpClientUtil,"Orange","forbidSaleOuter");
+        dmsBaseMethods.saveOptItemRule(dmsClient,"Orange","forbidSaleOuter");
         //审核
         resultJSONObject = (JSONObject) tradeBaseMethods.audit(httpClientUtil,sid,"fail");
         //判断审核是否成功
@@ -90,13 +87,12 @@ public class DmsAudit extends BaseTest {
 
     @Test(groups = "auditSuccess", description = "商品在供销商处允许分销")
     public void auditAllowProduct(){
-        loginDms();
         //供销商设置商品允许分销
-        dmsBaseMethods.saveOptItemRule(httpClientUtil,"Orange","allowSaleOuter");
+        dmsBaseMethods.saveOptItemRule(dmsClient,"Orange","allowSaleOuter");
         //审核
         resultJSONObject = (JSONObject) tradeBaseMethods.audit(httpClientUtil,sid,"success");
         //判断审核是否成功
-        Assert.assertEquals(resultJSONObject.getString("sysStatus"), TradeOrderSidStatus.WAIT_DEST_SEND_GOODS,"订单审核失败");
+        Assert.assertEquals(resultJSONObject.getString("sysStatus"), TradeStatus.WAIT_DEST_SEND_GOODS,"订单审核失败");
     }
 
     /**

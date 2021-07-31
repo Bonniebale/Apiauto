@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.api.base.BaseTest;
 import com.api.config.Interface;
-import com.api.config.TradeOrderSidStatus;
+import com.api.config.TradeStatus;
 import com.api.model.TradeModel;
 import com.api.store.TradeAPIList;
 import com.api.utils.DatabaseUtil;
@@ -147,7 +147,7 @@ public class TradeOrder extends BaseTest {
 
         //审核订单
         tradeJSONObject = (JSONObject) tradeAPIList.auditTrade(httpClientUtil, Interface.TRADE_AUDIT,params,"success");
-        Assert.assertEquals(tradeJSONObject.getString("sysStatus"), TradeOrderSidStatus.WAIT_DEST_SEND_GOODS,"订单"+sids+"状态不是待供销商发货，审核失败");
+        Assert.assertEquals(tradeJSONObject.getString("sysStatus"), TradeStatus.WAIT_DEST_SEND_GOODS,"订单"+sids+"状态不是待供销商发货，审核失败");
 
     }
 

@@ -3,7 +3,7 @@ package com.api.config;
 import java.sql.Types;
 import java.util.Date;
 
-public class TradeOrderSidStatus {
+public class TradeStatus {
 
     //========================= 系统状态枚举 =======================//
     /**

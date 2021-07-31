@@ -28,9 +28,20 @@ import java.util.*;
 
 @Slf4j
 public class HttpClientUtil {
-    public static BasicCookieStore basicCookieStore;
-    public static CloseableHttpClient httpClient;
+//    public static BasicCookieStore basicCookieStore; //static会导致无法切换client
+//    public static CloseableHttpClient httpClient;
+    public BasicCookieStore basicCookieStore;
+    public CloseableHttpClient httpClient;
+    public  String name;
     private final String url = EnvironmentConfig.environment;
+
+    public HttpClientUtil(String name) {
+        this.name = name;
+    }
+
+    public HttpClientUtil() {
+        this.name = "normal";
+    }
 
 
     /***
@@ -129,7 +140,7 @@ public class HttpClientUtil {
      *当httpclient传参方式为form_data时，接受传递过来的url、form-data数据并执行处理response结果方法
      * @param path 传递的URI
      * @param params form-data params
-     * @return
+     * @return ResultBean类型的对象
      */
     public ResultBean post(String path, Map<String, String> params)  {
         List<NameValuePair> pairs = new ArrayList<>();
@@ -150,9 +161,9 @@ public class HttpClientUtil {
     }
 
     /***
-     * 处理请求的返回结果
+     * 处理请求的返回结果(把响应结果封装成HttpResult对象)
      * @param response
-     * @return response中的具体的返回对象
+     * @return 处理过的response的result对象
      */
     private ResultBean handleResponse(HttpResponse response) {
         if (response.getStatusLine().getStatusCode() != HttpURLConnection.HTTP_OK) {//200
@@ -168,7 +179,8 @@ public class HttpClientUtil {
             throw new IllegalArgumentException("解析失败" + e.getMessage());
         }
 
-        ResultBean resultBean = JSONObject.parseObject(responseStr, ResultBean.class);
+        ResultBean resultBean = JSONObject.parseObject(responseStr, ResultBean.class);//将str转化为相应的JSONObject对象，str是“键值对”形式的json字符串，转化为JSONObject对象之后就可以使用其内置的方法，进行各种处理
+
         if (resultBean.getResult() != 1) {
             throw new ApiException(resultBean.getResult(), resultBean.getSubCode(), resultBean.getMessage(), resultBean.getData());
         }
@@ -212,10 +224,9 @@ public class HttpClientUtil {
      * @throws IOException
      */
 
-    public CloseableHttpResponse post(String path, Map<String, String> headerMap, List<NameValuePair> params, String jsonStr) throws IOException {
+    private CloseableHttpResponse post(String path, Map<String, String> headerMap, List<NameValuePair> params, String jsonStr) throws IOException {
         Assert.notNull(httpClient, "请先登录");//判断传进来的参数值是否不为空值，如果为空就抛出异常throw new IllegalArgumentException(msg)，代码如果不捕捉处理这个异常，代码不往下执行，不为空代码继续向下执行。
         HttpPost httpPost = new HttpPost(url+path);
-        //添加请求参数
 
         //加载请求头
         if (headerMap != null) {
@@ -225,6 +236,7 @@ public class HttpClientUtil {
         }
         buildDefaultHeader(httpPost);
 
+        //添加请求参数
         if (params != null) {
             //执行表单的一定要用这个UrlEncodedFormEntity类
             UrlEncodedFormEntity formEntity = new UrlEncodedFormEntity(params,"utf-8");

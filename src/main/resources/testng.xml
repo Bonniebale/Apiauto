@@ -8,13 +8,16 @@
                     <include name="login"/>
                 </methods>
             </class>-->
-            <class name="com.api.cases.TradeOrder">
+            <class name="com.api.cases.DmsAudit">
                 <methods>
-                    <include name="addTradeOrder"/>
-                    <include name="dmsAddDistributor"/>
-                    <include name="saveTemplate"/>
-                    <include name="tradeAudit"/>
-                    <include name="searchTradeInfoBySid"/>
+<!--                    <include name="addTradeOrder"/>-->
+<!--                    <include name="dmsAddDistributor"/>-->
+<!--                    <include name="saveTemplate"/>-->
+<!--                    <include name="tradeAudit"/>-->
+<!--                    <include name="searchTradeInfoBySid"/>-->
+                    <include name="InsteadUserSuccess"/>
+                    <include name="InsteadUserFail"/>
+
 
                 </methods>
             </class>
