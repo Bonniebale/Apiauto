@@ -254,7 +254,7 @@ public class HttpClientUtil {
      * login方法
      * @param companyName 公司名称
      * @param userName 用户名称
-     * @param password 密码
+     * @param password 密码git
      */
     public void login(String companyName, String userName, String password) {
         basicCookieStore = new BasicCookieStore();
@@ -269,9 +269,7 @@ public class HttpClientUtil {
     //     //调试代码专用
     //    public static void main(String[] args) throws Exception {
     //        HttpClientUtil client = new HttpClientUtil();
-    //        client.login("咖啡测试3", "admin", "55A86C51427E48F486272A465CE15D73");
+    //        client.login("name", "account", "mm");
     //        ResultBean resultBean = client.get("/wms/config/get", null);
-    //        System.out.println(resultBean.getResult());
-    //        System.out.println(resultBean.getData());
     //    }
 }
