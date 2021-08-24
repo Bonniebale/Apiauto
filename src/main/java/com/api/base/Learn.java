@@ -2,7 +2,6 @@ package com.api.base;
 
 import org.testng.annotations.Test;
 
-import java.lang.reflect.Array;
 import java.util.*;
 
 public class Learn {
@@ -59,11 +58,58 @@ public class Learn {
         System.out.println("两个数组取交集："+jiaoji+"。合并后的数组中总个数为："+jiaoji.size());
 
     }
-    public void arrayToList(){
+
+    /**
+     * 二分查找
+     * @param arr
+     * @param target
+     * @return
+     */
+    public int arrayToList(int[] arr, int target){
+
+        int left = 0;
+        int right = arr.length-1;
+        while (left <= right){
+            int mid = (left+right)/2;
+            if (target == arr[mid]){
+                return mid;
+            }else if ( target >arr[mid] ){
+                left = mid+1;
+            }else if (target < arr[mid]){
+                right = mid-1;
+            }
+        }
+        return -1;
+    }
+
+    @Test
+    public void ints(){//int =2.5的话其实取的是=2
+        int r = 5;
+        int l = 0;
+        int mid = (r+l)/2;
+        System.out.println(mid);
+    }
+    //斐波那契数列，使用数组的算法
+
+    public void fibonacci(int n){
+
+        int [] arr = new int[40];
+        arr[0] = 0;
+        arr[1] = 1;
+        for (int i = 2; i<= n; i++){
+            arr[i] = arr[i-1]+arr[i-2];
+        }
+        System.out.println(arr[n]);
 
     }
 
     public static void main(String[] args){
+        int[] arr = new int[] { 1, 20, 23, 24, 35, 46, 77, 78, 99, 100 };
+        int target = 78;
+        Learn learn = new Learn();
+        learn.arrayToList(arr,target);
+        System.out.println(learn.arrayToList(arr,target));
+        learn.fibonacci(4);
 
     }
 }

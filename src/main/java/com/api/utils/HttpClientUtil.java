@@ -57,6 +57,7 @@ public class HttpClientUtil {
         //执行请求
         log.info("开始执行get请求");
         CloseableHttpResponse httpResponse = httpClient.execute(httpGet);
+
         return httpResponse;
     }
 
